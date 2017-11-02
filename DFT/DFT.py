@@ -12,6 +12,7 @@ class DFT:
         returns a complex matrix representing fourier transform"""
 
         new_matrix = numpy.zeros((15,15),dtype=numpy.complex_)
+        n = 0
 
         for v in range(15):
             for u in range(15):
@@ -19,7 +20,8 @@ class DFT:
                     for x in range(15):
                         #n = matrix[y][x]*math.exp((-1j*2*math.pi*(u*x+v*y))/15)
                         n = matrix[y][x] * ((math.cos(2*math.pi*(v*y+u*x)/15))-(1j*math.sin(2*math.pi*(v*y+u*x)/15)))
-                        new_matrix[u][v] = n
+                        new_matrix[u][v] += n
+                        n = 0
         
         return new_matrix
 
@@ -35,9 +37,9 @@ class DFT:
             for u in range(15):
                 for y in range(15):
                     for x in range(15):
-                        #n = matrix[y][x]*math.exp((-1j*2*math.pi*(u*x+v*y))/15)
                         n = matrix[y][x] * ((math.cos(2*math.pi*(v*y+u*x)/15))+(1j*math.sin(2*math.pi*(v*y+u*x)/15)))
-                        new_matrix[u][v] = n
+                        new_matrix[u][v] += n
+                        n = 0
         
         return new_matrix
 
@@ -53,9 +55,9 @@ class DFT:
             for u in range(15):
                 for y in range(15):
                     for x in range(15):
-                        #n = matrix[y][x]*math.exp((-1j*2*math.pi*(u*x+v*y))/15)
                         n = matrix[y][x] * ((math.cos(2*math.pi*(v*y+u*x)/15)))
-                        new_matrix[u][v] = n
+                        new_matrix[u][v] += n
+                        n = 0
         
         return new_matrix
 
