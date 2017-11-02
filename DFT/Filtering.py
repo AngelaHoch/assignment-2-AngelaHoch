@@ -2,6 +2,7 @@
 # You are welcome to use fft that are available in numpy and opencv
 import numpy
 import copy
+import matplotlib
 
 class Filtering:
     image = None
@@ -144,9 +145,12 @@ class Filtering:
         image = numpy.fft.ifft2(image)
         #image = numpy.absolute(image)
         #return image
-        image = numpy.absolute(numpy.exp(image))
+        #image = numpy.log(image)
+
+        #matplotlib.pyplot.imshow(image)        
 
         image_temp = copy.deepcopy(image)
+
 
         maxval = image_temp.max()
         minval = image_temp.min()
@@ -155,11 +159,11 @@ class Filtering:
             for i in range(image.shape[1]):
                 image_temp[j][i] = ((255)/(maxval - minval))*(image[j][i] - minval)
 
-        image = image_temp.astype(numpy.uint8)
+        #image = image_temp.astype(numpy.uint8)
 
-        image = 255 - image
+        image = image_temp
 
-        return image
+        return numpy.absolute(image)
 
 
     def filtering(self):
@@ -184,26 +188,33 @@ class Filtering:
 
         fftimage = self.image
         fftimage = numpy.fft.fftshift(numpy.fft.fft2(fftimage))
-        fftimage = numpy.log(numpy.absolute(fftimage))
-        fftimage_temp = fftimage
+        #fftimage = numpy.log(fftimage)
+        fftimage_temp = copy.deepcopy(fftimage)
+        fftimage_temp = numpy.absolute(numpy.log(fftimage_temp))
 
-        maxval = fftimage.max()
-        minval = fftimage.min()
+        maxval = fftimage_temp.max()
+        minval = fftimage_temp.min()
 
         for j in range(fftimage.shape[0]):
             for i in range(fftimage.shape[1]):
-                fftimage_temp[j][i] = ((255)/(maxval - minval))*(fftimage[j][i] - minval)
-
-        fftimage = fftimage_temp.astype(numpy.uint8)
+                fftimage_temp[j][i] = ((255)/(maxval - minval))*(fftimage_temp[j][i] - minval)
+        fftimage_temp = numpy.absolute(fftimage_temp)
+        fftimage_temp = fftimage_temp.astype(numpy.uint8)
+        #fftimage = fftimage_temp
 
         shape = (fftimage.shape[1], fftimage.shape[0]);
         mask = self.filter(shape, self.cutoff, self.order)
 
         filteredDFT = fftimage*mask
+        filteredDFT_temp = fftimage_temp*mask
 
         new_image = self.post_process_image(filteredDFT)
+        #fftimage2 = numpy.fft.fftshift(numpy.fft.fft2(new_image))
+        #fftimage2 = numpy.log(fftimage2)
+        #fftimage2 = numpy.absolute(fftimage2)
+        #new_image = new_image - self.image
                 
-        return [new_image, fftimage, filteredDFT]
+        return [new_image, fftimage_temp, filteredDFT_temp]
 
 
 ##python dip_hw2_filter.py -i Lenna0.jpg -m ideal_l -c 50
