@@ -27,7 +27,7 @@ def main():
     """ The main funtion that parses input arguments, calls the approrpiate
      interpolation method and writes the output image"""
 
-    # intialize a matrix of 25X25 pixels
+    # intialize a matrix of 15X15 pixels
     input_matrix = np.int_(rand(15,15)*256)
     input_matrix = np.int_(rand(15,15)*256)
     print("---------------Input Matrix----------------")
